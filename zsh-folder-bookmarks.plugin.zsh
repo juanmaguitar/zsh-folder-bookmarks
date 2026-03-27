@@ -20,19 +20,41 @@ bm() {
   echo "Bookmarked: $target"
 }
 
-# bml [path]
-# List all bookmarks, or only those under a given path.
+# bml [path] [-r]
+# List all bookmarks, or those under a given path.
+# Without -r, only direct children of the given path are shown.
+# With -r, all bookmarks anywhere under the given path are shown.
 bml() {
   if [[ ! -f "$FOLDER_BOOKMARKS_FILE" ]]; then
     echo "No bookmarks yet. Use 'bm' to add one."
     return
   fi
 
-  if [[ -n "$1" ]]; then
-    local prefix="${1%/}"
-    grep "^${prefix}" "$FOLDER_BOOKMARKS_FILE"
-  else
+  local recursive=0
+  local raw_path=""
+
+  for arg in "$@"; do
+    if [[ "$arg" == "-r" ]]; then
+      recursive=1
+    else
+      raw_path="$arg"
+    fi
+  done
+
+  if [[ -z "$raw_path" ]]; then
     cat "$FOLDER_BOOKMARKS_FILE"
+    return
+  fi
+
+  local prefix
+  prefix="$(cd "$raw_path" 2>/dev/null && pwd)" || { echo "Invalid path: $raw_path"; return 1; }
+  prefix="${prefix%/}"
+
+  if (( recursive )); then
+    grep "^${prefix}/" "$FOLDER_BOOKMARKS_FILE"
+  else
+    # Direct children only: prefix + one path segment, nothing deeper
+    grep "^${prefix}/[^/]*$" "$FOLDER_BOOKMARKS_FILE"
   fi
 }
 
