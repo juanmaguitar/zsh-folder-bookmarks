@@ -7,7 +7,8 @@
 # bm [path]
 # Bookmark the given path (defaults to current directory).
 bm() {
-  local target="${1:-$(pwd)}"
+  local target
+  target="$(cd "${1:-.}" 2>/dev/null && pwd)" || { echo "Invalid path: $1"; return 1; }
   target="${target%/}"  # strip trailing slash
 
   if grep -qxF "$target" "$FOLDER_BOOKMARKS_FILE" 2>/dev/null; then
@@ -59,7 +60,8 @@ bmg() {
 # bmr [path]
 # Remove a bookmark. Defaults to current directory.
 bmr() {
-  local target="${1:-$(pwd)}"
+  local target
+  target="$(cd "${1:-.}" 2>/dev/null && pwd)" || { echo "Invalid path: $1"; return 1; }
   target="${target%/}"
 
   if ! grep -qxF "$target" "$FOLDER_BOOKMARKS_FILE" 2>/dev/null; then
