@@ -9,12 +9,29 @@ Bookmark folders and jump to them quickly from the command line.
 | `bm` | Bookmark current directory |
 | `bm ~/some/path` | Bookmark a specific path |
 | `bml` | List all bookmarks |
-| `bml ~/Projects` | List bookmarks under a path |
+| `bml .` | List direct children of current directory |
+| `bml ~/Projects` | List direct children of a path |
+| `bml . -r` | List all bookmarks anywhere under current directory |
 | `bmg` | Jump to a bookmark (interactive) |
 | `bmr` | Remove bookmark for current directory |
 | `bmr ~/some/path` | Remove a specific bookmark |
 
 `bmg` uses [fzf](https://github.com/junegunn/fzf) for fuzzy selection if installed, otherwise falls back to a numbered list.
+
+## Filtering and navigation
+
+Filter results with `grep` and pipe into `cd` using `$()` command substitution:
+
+```zsh
+# Filter bookmarks by name
+bml . | grep cohort
+
+# cd directly into a filtered result
+cd $(bml . | grep cohort)
+
+# Works with -r for deeper searches too
+cd $(bml ~/Projects -r | grep my-app)
+```
 
 ## Configuration
 
