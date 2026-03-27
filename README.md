@@ -62,25 +62,3 @@ export FOLDER_BOOKMARKS_FILE="$HOME/.config/folder-bookmarks"
    source ~/.zshrc
    ```
 
-### Sheldon
-
-Add to `~/.config/sheldon/plugins.toml`:
-
-```toml
-[plugins.zsh-folder-bookmarks]
-github = "juanmanuelgarrido/zsh-folder-bookmarks"
-```
-
-Then run `sheldon lock`.
-
-### Antigen
-
-```zsh
-antigen bundle juanmanuelgarrido/zsh-folder-bookmarks
-```
-
-### Zinit
-
-```zsh
-zinit light juanmanuelgarrido/zsh-folder-bookmarks
-```
